@@ -27,7 +27,7 @@ export function PropertyBookingCard({
   availableDate,
   image,
   pricePerNight,
-  currency = "$",
+  currency = "₹",
   propertyType,
   features = [],
   amenities = [],
