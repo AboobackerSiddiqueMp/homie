@@ -2,11 +2,13 @@
 
 import type React from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useState } from "react"
 import { Menu, X, ArrowUpRight, ArrowRight } from "lucide-react"
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname()
   const isScrolled = true
 
   const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
@@ -27,6 +29,8 @@ export function Header() {
   }
 
   const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname !== "/") return
+
     e.preventDefault()
     window.scrollTo({
       top: 0,
@@ -44,7 +48,7 @@ export function Header() {
         }`}
       >
         <div className="flex items-center justify-between">
-          <a href="#" onClick={handleLogoClick} className="flex items-center gap-2 cursor-pointer">
+          <Link href="/" onClick={handleLogoClick} className="flex items-center gap-2 cursor-pointer">
             <svg
               className={`w-6 h-6 transition-colors duration-300 ${isScrolled ? "text-black" : "text-foreground"}`}
               viewBox="0 0 24 24"
@@ -60,7 +64,7 @@ export function Header() {
             >
               Homie
             </span>
-          </a>
+          </Link>
 
           <nav className="hidden md:flex items-center gap-8">
             <a
