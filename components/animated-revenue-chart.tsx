@@ -12,6 +12,13 @@ const revenueCategories = [
   { name: "Insurance", icon: Shield, color: "#f59e0b" },
 ]
 
+const initialRevenueData = [
+  { ...revenueCategories[0], value: 16936 },
+  { ...revenueCategories[1], value: 24820 },
+  { ...revenueCategories[2], value: 13750 },
+  { ...revenueCategories[3], value: 29110 },
+]
+
 function generateRandomData() {
   return revenueCategories.map((cat) => ({
     ...cat,
@@ -20,7 +27,7 @@ function generateRandomData() {
 }
 
 export function AnimatedRevenueChart() {
-  const [data, setData] = useState(generateRandomData())
+  const [data, setData] = useState(initialRevenueData)
   const [totalRevenue, setTotalRevenue] = useState(0)
   const [growth, setGrowth] = useState(12.5)
   const [activeIndex, setActiveIndex] = useState(0)
