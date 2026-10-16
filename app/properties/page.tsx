@@ -3,7 +3,6 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Heart, MapPin, Search, SlidersHorizontal, Star } from "lucide-react"
-import { motion } from "framer-motion"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 
@@ -38,13 +37,13 @@ export default function PropertiesPage() {
           </div>
           <div className="mb-6 mt-10 flex items-center justify-between"><p className="text-sm text-muted-foreground">Showing <span className="font-medium text-foreground">{properties.length} stays</span></p><button className="text-sm underline underline-offset-4">Sort: Recommended</button></div>
           <div className="grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-            {properties.map((property, index) => <motion.article key={property.slug} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.07, duration: 0.5 }} className="group">
+            {properties.map((property) => <article key={property.slug} className="group">
               <Link href={`/properties/${property.slug}`} className="block">
                 <div className="relative aspect-[1.08] overflow-hidden rounded-[1.6rem] bg-muted"><Image src={property.image} alt={property.name} fill className="object-cover transition duration-700 group-hover:scale-105" /><div className="absolute inset-x-4 top-4 flex items-center justify-between"><span className="rounded-full bg-background/85 px-3 py-1.5 text-[11px] font-medium backdrop-blur">{property.tag}</span><button aria-label={`Save ${property.name}`} onClick={(e) => e.preventDefault()} className="grid size-9 place-items-center rounded-full bg-background/80 backdrop-blur transition hover:bg-background"><Heart className="size-4" /></button></div></div>
                 <div className="flex items-start justify-between gap-4 pt-4"><div><h2 className="font-serif text-2xl">{property.name}</h2><p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground"><MapPin className="size-3.5" />{property.location}</p><p className="mt-3 text-xs uppercase tracking-[0.18em] text-muted-foreground">{property.type} · 2–6 guests</p></div><div className="flex items-center gap-1 text-sm"><Star className="size-3.5 fill-current" /> {property.rating}</div></div>
                 <p className="mt-4 text-sm"><strong>{formatINR(property.price)}</strong> <span className="text-muted-foreground">night</span></p>
               </Link>
-            </motion.article>)}
+            </article>)}
           </div>
         </div>
       </section>
