@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import Link from "next/link"
 import { useState } from "react"
 import { Menu, X, ArrowUpRight, ArrowRight } from "lucide-react"
 
@@ -80,15 +81,14 @@ export function Header() {
             >
               Features
             </a>
-            <a
+            <Link
               href="/properties"
-              onClick={(e) => handleSmoothScroll(e, "pricing")}
               className={`text-sm transition-colors cursor-pointer ${
                 isScrolled ? "text-zinc-600 hover:text-black" : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Properties
-            </a>
+            </Link>
             <a
               href="#testimonials"
               onClick={(e) => handleSmoothScroll(e, "testimonials")}
@@ -110,7 +110,8 @@ export function Header() {
           </nav>
 
           <div className="hidden md:flex items-center gap-1">
-            <button
+            <Link
+              href="/properties"
               className={`relative flex items-center gap-0 border rounded-full pl-5 pr-1 py-1 transition-all duration-300 group overflow-hidden ${
                 isScrolled ? "border-zinc-300" : "border-border"
               }`}
@@ -139,7 +140,7 @@ export function Header() {
                   }`}
                 />
               </span>
-            </button>
+            </Link>
           </div>
 
           <button
@@ -174,15 +175,15 @@ export function Header() {
             >
               Features
             </a>
-            <a
+            <Link
               href="/properties"
-              onClick={(e) => handleSmoothScroll(e, "pricing")}
+              onClick={() => setIsOpen(false)}
               className={`transition-colors cursor-pointer ${
                 isScrolled ? "text-zinc-600 hover:text-black" : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Properties
-            </a>
+            </Link>
             <a
               href="#testimonials"
               onClick={(e) => handleSmoothScroll(e, "testimonials")}
@@ -207,7 +208,8 @@ export function Header() {
               <a href="#" className={isScrolled ? "text-black" : "text-foreground"}>
                 Login
               </a>
-              <button
+              <Link
+                href="/properties"
                 className={`relative flex items-center gap-0 border rounded-full pl-5 pr-1 py-1 w-fit transition-all duration-300 group overflow-hidden ${
                   isScrolled ? "border-zinc-300" : "border-border"
                 }`}
@@ -236,7 +238,7 @@ export function Header() {
                     }`}
                   />
                 </span>
-              </button>
+              </Link>
             </div>
           </nav>
         )}
