@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
 import { Home, Calendar, MapPin, Users, Wifi, Car, Waves } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -17,6 +18,7 @@ export interface PropertyBookingCardProps {
   amenities?: string[]
   rating?: number
   onBook?: () => void
+  bookingHref?: string
   className?: string
 }
 
@@ -27,12 +29,13 @@ export function PropertyBookingCard({
   availableDate,
   image,
   pricePerNight,
-  currency = "$",
+  currency = "₹",
   propertyType,
   features = [],
   amenities = [],
   rating,
   onBook,
+  bookingHref,
   className,
 }: PropertyBookingCardProps) {
   return (
@@ -127,12 +130,22 @@ export function PropertyBookingCard({
               <span className="text-sm font-normal text-slate-500">/night</span>
             </div>
           </div>
-          <button
-            onClick={onBook}
-            className="rounded-xl bg-foreground px-6 py-3 font-semibold text-background transition-colors hover:bg-foreground/90 text-sm"
-          >
-            Book Now
-          </button>
+          {bookingHref ? (
+            <Link
+              href={bookingHref}
+              className="rounded-xl bg-foreground px-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-foreground/90"
+            >
+              View stay
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={onBook}
+              className="rounded-xl bg-foreground px-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-foreground/90"
+            >
+              Book Now
+            </button>
+          )}
         </div>
       </div>
     </div>

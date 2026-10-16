@@ -1,11 +1,14 @@
 "use client"
 
 import type React from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useState } from "react"
 import { Menu, X, ArrowUpRight, ArrowRight } from "lucide-react"
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname()
   const isScrolled = true
 
   const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
@@ -26,6 +29,8 @@ export function Header() {
   }
 
   const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname !== "/") return
+
     e.preventDefault()
     window.scrollTo({
       top: 0,
@@ -43,7 +48,7 @@ export function Header() {
         }`}
       >
         <div className="flex items-center justify-between">
-          <a href="#" onClick={handleLogoClick} className="flex items-center gap-2 cursor-pointer">
+          <Link href="/" onClick={handleLogoClick} className="flex items-center gap-2 cursor-pointer">
             <svg
               className={`w-6 h-6 transition-colors duration-300 ${isScrolled ? "text-black" : "text-foreground"}`}
               viewBox="0 0 24 24"
@@ -59,7 +64,7 @@ export function Header() {
             >
               Homie
             </span>
-          </a>
+          </Link>
 
           <nav className="hidden md:flex items-center gap-8">
             <a
@@ -80,15 +85,14 @@ export function Header() {
             >
               Features
             </a>
-            <a
-              href="#pricing"
-              onClick={(e) => handleSmoothScroll(e, "pricing")}
+            <Link
+              href="/properties"
               className={`text-sm transition-colors cursor-pointer ${
                 isScrolled ? "text-zinc-600 hover:text-black" : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Properties
-            </a>
+            </Link>
             <a
               href="#testimonials"
               onClick={(e) => handleSmoothScroll(e, "testimonials")}
@@ -110,7 +114,8 @@ export function Header() {
           </nav>
 
           <div className="hidden md:flex items-center gap-1">
-            <button
+            <Link
+              href="/properties"
               className={`relative flex items-center gap-0 border rounded-full pl-5 pr-1 py-1 transition-all duration-300 group overflow-hidden ${
                 isScrolled ? "border-zinc-300" : "border-border"
               }`}
@@ -139,7 +144,7 @@ export function Header() {
                   }`}
                 />
               </span>
-            </button>
+            </Link>
           </div>
 
           <button
@@ -174,15 +179,15 @@ export function Header() {
             >
               Features
             </a>
-            <a
-              href="#pricing"
-              onClick={(e) => handleSmoothScroll(e, "pricing")}
+            <Link
+              href="/properties"
+              onClick={() => setIsOpen(false)}
               className={`transition-colors cursor-pointer ${
                 isScrolled ? "text-zinc-600 hover:text-black" : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Properties
-            </a>
+            </Link>
             <a
               href="#testimonials"
               onClick={(e) => handleSmoothScroll(e, "testimonials")}
@@ -207,7 +212,8 @@ export function Header() {
               <a href="#" className={isScrolled ? "text-black" : "text-foreground"}>
                 Login
               </a>
-              <button
+              <Link
+                href="/properties"
                 className={`relative flex items-center gap-0 border rounded-full pl-5 pr-1 py-1 w-fit transition-all duration-300 group overflow-hidden ${
                   isScrolled ? "border-zinc-300" : "border-border"
                 }`}
@@ -236,7 +242,7 @@ export function Header() {
                     }`}
                   />
                 </span>
-              </button>
+              </Link>
             </div>
           </nav>
         )}

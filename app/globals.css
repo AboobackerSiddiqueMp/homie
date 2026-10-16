@@ -10,14 +10,14 @@ html {
 
 :root {
   /* Converting to light mode theme */
-  --background: oklch(0.98 0 0);
-  --foreground: oklch(0.1 0 0);
-  --card: oklch(0.99 0 0);
+  --background: oklch(0.97 0.018 88);
+  --foreground: oklch(0.24 0.035 155);
+  --card: oklch(0.99 0.008 88);
   --card-foreground: oklch(0.1 0 0);
   --popover: oklch(0.99 0 0);
   --popover-foreground: oklch(0.1 0 0);
-  --primary: oklch(0.1 0 0);
-  --primary-foreground: oklch(0.98 0 0);
+  --primary: oklch(0.34 0.075 153);
+  --primary-foreground: oklch(0.97 0.018 88);
   --secondary: oklch(0.94 0 0);
   --secondary-foreground: oklch(0.1 0 0);
   --muted: oklch(0.92 0 0);
@@ -26,7 +26,7 @@ html {
   --accent-foreground: oklch(0.1 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.88 0 0);
+  --border: oklch(0.88 0.025 88);
   --input: oklch(0.94 0 0);
   --ring: oklch(0.1 0 0);
   --chart-1: oklch(0.1 0 0);
