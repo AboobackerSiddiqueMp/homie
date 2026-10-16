@@ -100,7 +100,12 @@ export function HeroSection() {
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[400px]"
               }`}
             >
-              <img src="/images/iphone-frame.png" alt="Application Homie" className="w-full h-auto relative z-10" />
+              <img
+                src="/images/iphone-frame.png"
+                alt="Application Homie"
+                className="w-full h-auto relative z-10 drop-shadow-2xl"
+                referrerPolicy="no-referrer"
+              />
             </div>
           </div>
         </div>

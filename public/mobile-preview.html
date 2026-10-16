@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=547, height=1190, initial-scale=1.0">
+  <title>Homie Mobile App</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    body {
+      width: 547px;
+      height: 1190px;
+      overflow: hidden;
+      background: #fbf9f5;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #1a2e26;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    /* Subtle iPhone glass sheen */
+    .screen-glare {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 480px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.03) 45%, transparent 60%);
+      pointer-events: none;
+      z-index: 99;
+    }
+
+    /* iOS Status Bar */
+    .status-bar {
+      height: 56px;
+      padding: 14px 28px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 50;
+    }
+    .status-time {
+      font-size: 16.5px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      color: #111827;
+      margin-left: 6px;
+    }
+    .dynamic-island {
+      position: absolute;
+      left: 50%;
+      top: 14px;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 35px;
+      background: #000;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 12px;
+      box-shadow: 0 0 1px 1px rgba(255,255,255,0.06);
+    }
+    .camera-lens {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #0e1524;
+      box-shadow: inset 0 0 2px #263859;
+    }
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-right: 6px;
+    }
+    .icon-svg {
+      width: 17px;
+      height: 17px;
+      fill: #111827;
+    }
+    .battery-icon {
+      width: 25px;
+      height: 13px;
+      border: 2px solid #111827;
+      border-radius: 4px;
+      padding: 1.5px;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .battery-icon::after {
+      content: '';
+      position: absolute;
+      right: -4px;
+      top: 2.5px;
+      width: 2px;
+      height: 5px;
+      background: #111827;
+      border-radius: 0 1px 1px 0;
+    }
+    .battery-level {
+      width: 85%;
+      height: 100%;
+      background: #111827;
+      border-radius: 1px;
+    }
+
+    /* App Header */
+    .app-header {
+      padding: 6px 24px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      background: #1e3a2f;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 4px 10px rgba(30, 58, 47, 0.25);
+    }
+    .brand-name {
+      font-family: "Georgia", "Playfair Display", serif;
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #15261f;
+    }
+    .user-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      border: 2px solid #fff;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Search Bar */
+    .search-box {
+      margin: 2px 22px 12px;
+      background: #ffffff;
+      border-radius: 36px;
+      padding: 9px 12px 9px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 6px 20px rgba(22, 45, 36, 0.08), 0 1px 2px rgba(0,0,0,0.03);
+      border: 1px solid rgba(220, 226, 222, 0.8);
+    }
+    .search-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .search-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #172a22;
+    }
+    .search-subtitle {
+      font-size: 12px;
+      color: #64748b;
+    }
+    .search-btn {
+      width: 36px;
+      height: 36px;
+      background: #254436;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 2px 6px rgba(37, 68, 54, 0.3);
+    }
+
+    /* Filter Categories */
+    .categories {
+      display: flex;
+      gap: 8px;
+      padding: 0 22px 12px;
+      overflow-x: hidden;
+    }
+    .category-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 600;
+      white-space: nowrap;
+      background: #ffffff;
+      border: 1px solid #e5e9e6;
+      color: #4a5568;
+    }
+    .category-chip.active {
+      background: #254436;
+      border-color: #254436;
+      color: #ffffff;
+    }
+
+    /* Content Area */
+    .content {
+      flex: 1;
+      padding: 0 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      overflow: hidden;
+    }
+
+    /* Main Featured Card */
+    .property-card {
+      background: #ffffff;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(18, 38, 30, 0.08);
+      border: 1px solid rgba(226, 232, 229, 0.85);
+      position: relative;
+    }
+    .card-img-wrap {
+      width: 100%;
+      height: 255px;
+      position: relative;
+      background: #cbd5e1;
+    }
+    .card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .badge-fave {
+      position: absolute;
+      top: 13px;
+      left: 13px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(8px);
+      padding: 5px 11px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #172a22;
+      letter-spacing: 0.3px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .heart-btn {
+      position: absolute;
+      top: 13px;
+      right: 13px;
+      width: 34px;
+      height: 34px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e53e3e;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    .card-body {
+      padding: 14px 16px 14px;
+    }
+    .card-row-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 3px;
+    }
+    .property-title {
+      font-family: "Georgia", "Playfair Display", serif;
+      font-size: 21px;
+      font-weight: 700;
+      color: #15261f;
+    }
+    .property-rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #15261f;
+    }
+    .property-location {
+      font-size: 12.5px;
+      color: #64748b;
+      margin-bottom: 10px;
+    }
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 8px;
+      border-top: 1px solid #f1f5f3;
+    }
+    .price-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1px;
+    }
+    .price-tag {
+      font-size: 18px;
+      font-weight: 800;
+      color: #15261f;
+    }
+    .price-period {
+      font-size: 12px;
+      font-weight: 500;
+      color: #64748b;
+      margin-left: 3px;
+    }
+    .book-chip {
+      background: #254436;
+      color: white;
+      padding: 6px 15px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* List Cards */
+    .mini-card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .mini-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 10px 14px;
+      display: flex;
+      gap: 13px;
+      align-items: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+      border: 1px solid #e9ede9;
+    }
+    .mini-img {
+      width: 72px;
+      height: 72px;
+      border-radius: 14px;
+      object-fit: cover;
+      background: #e2e8f0;
+    }
+    .mini-info {
+      flex: 1;
+    }
+    .mini-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .mini-title {
+      font-family: "Georgia", "Playfair Display", serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #15261f;
+    }
+    .mini-rating {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #15261f;
+    }
+    .mini-meta {
+      font-size: 11.5px;
+      color: #64748b;
+      margin: 2px 0 4px;
+    }
+    .mini-price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .mini-price {
+      font-size: 14px;
+      font-weight: 700;
+      color: #15261f;
+      display: flex;
+      align-items: center;
+    }
+    .mini-link {
+      color: #254436;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+
+    /* Bottom Tab Bar */
+    .tab-bar {
+      height: 78px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(226, 232, 229, 0.8);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 16px 14px;
+      position: relative;
+      z-index: 50;
+    }
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+    .tab-item.active {
+      color: #254436;
+    }
+    .tab-icon {
+      width: 21px;
+      height: 21px;
+    }
+
+    /* iOS Home Indicator */
+    .home-indicator {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 136px;
+      height: 4.5px;
+      background: #0f172a;
+      border-radius: 10px;
+      opacity: 0.85;
+      z-index: 60;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sheen glare effect -->
+  <div class="screen-glare"></div>
+
+  <!-- iOS Status Bar -->
+  <div class="status-bar">
+    <div class="status-time">9:41</div>
+    <div class="dynamic-island">
+      <div class="camera-lens"></div>
+    </div>
+    <div class="status-icons">
+      <!-- Cellular Signal -->
+      <svg class="icon-svg" viewBox="0 0 24 24">
+        <path d="M2 19h3v-4H2v4zm6 0h3v-8H8v8zm6 0h3V7h-3v12zm6 0h3V3h-3v16z"/>
+      </svg>
+      <!-- WiFi -->
+      <svg class="icon-svg" viewBox="0 0 24 24">
+        <path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98A16.88 16.88 0 0012 4zm0 4c3.42 0 6.53 1.34 8.84 3.53L12 19.46 3.16 11.53A12.87 12.87 0 0112 8z"/>
+      </svg>
+      <!-- Battery -->
+      <div class="battery-icon">
+        <div class="battery-level"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Header -->
+  <div class="app-header">
+    <div class="brand">
+      <div class="brand-logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <span class="brand-name">Homie</span>
+    </div>
+    <div class="user-avatar">
+      <img src="/placeholder-user.jpg" alt="User">
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-box">
+    <div class="search-text">
+      <span class="search-title">Where to next?</span>
+      <span class="search-subtitle">Anywhere · Any week · 2 guests</span>
+    </div>
+    <div class="search-btn">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Filter Chips -->
+  <div class="categories">
+    <div class="category-chip active">
+      <span>✨ Recommended</span>
+    </div>
+    <div class="category-chip">
+      <span>🏖 Beachfront</span>
+    </div>
+    <div class="category-chip">
+      <span>🏔 Mountain</span>
+    </div>
+    <div class="category-chip">
+      <span>🏡 Estates</span>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="content">
+    <!-- Main Card -->
+    <div class="property-card">
+      <div class="card-img-wrap">
+        <img src="/images/property-beach-villa.jpg" alt="Casa Amara">
+        <div class="badge-fave">Guest Favourite</div>
+        <div class="heart-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-row-top">
+          <h2 class="property-title">Casa Amara</h2>
+          <div class="property-rating">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            <span>4.92</span>
+          </div>
+        </div>
+        <p class="property-location">Goa, India · Private pool · Sea view</p>
+        <div class="card-footer">
+          <div class="price-wrap">
+            <!-- Rupee SVG -->
+            <svg width="13" height="15" viewBox="0 0 24 24" fill="none" stroke="#15261f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 1px;">
+              <path d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3a4 4 0 0 0 0-8"/>
+            </svg>
+            <span class="price-tag">18,500</span>
+            <span class="price-period">/ night</span>
+          </div>
+          <div class="book-chip">Reserve</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mini Cards Feed -->
+    <div class="mini-card-list">
+      <!-- Card 2 -->
+      <div class="mini-card">
+        <img src="/images/property-mountain-cabin.jpg" alt="Pine & Peak" class="mini-img">
+        <div class="mini-info">
+          <div class="mini-title-row">
+            <div class="mini-title">Pine & Peak</div>
+            <div class="mini-rating">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#f59e0b">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <span>4.8</span>
+            </div>
+          </div>
+          <div class="mini-meta">Manali · Mountain Cabin · Quiet</div>
+          <div class="mini-price-row">
+            <div class="mini-price">
+              <svg width="11" height="13" viewBox="0 0 24 24" fill="none" stroke="#15261f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 1px;">
+                <path d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3a4 4 0 0 0 0-8"/>
+              </svg>
+              <span>9,200</span>
+              <span style="font-weight: 400; color: #64748b; font-size: 11px; margin-left: 2px;">/ night</span>
+            </div>
+            <span class="mini-link">View Stay →</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="mini-card">
+        <img src="/images/property-lakefront-modern.jpg" alt="Lakehouse 06" class="mini-img">
+        <div class="mini-info">
+          <div class="mini-title-row">
+            <div class="mini-title">Lakehouse 06</div>
+            <div class="mini-rating">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#f59e0b">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <span>4.9</span>
+            </div>
+          </div>
+          <div class="mini-meta">Udaipur · Modern lakefront villa</div>
+          <div class="mini-price-row">
+            <div class="mini-price">
+              <svg width="11" height="13" viewBox="0 0 24 24" fill="none" stroke="#15261f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 1px;">
+                <path d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3a4 4 0 0 0 0-8"/>
+              </svg>
+              <span>14,900</span>
+              <span style="font-weight: 400; color: #64748b; font-size: 11px; margin-left: 2px;">/ night</span>
+            </div>
+            <span class="mini-link">View Stay →</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="mini-card">
+        <img src="/images/property-city-loft.jpg" alt="The Boulevard Loft" class="mini-img">
+        <div class="mini-info">
+          <div class="mini-title-row">
+            <div class="mini-title">The Boulevard Loft</div>
+            <div class="mini-rating">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#f59e0b">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <span>4.7</span>
+            </div>
+          </div>
+          <div class="mini-meta">Bandra, Mumbai · Design Stay</div>
+          <div class="mini-price-row">
+            <div class="mini-price">
+              <svg width="11" height="13" viewBox="0 0 24 24" fill="none" stroke="#15261f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 1px;">
+                <path d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3a4 4 0 0 0 0-8"/>
+              </svg>
+              <span>12,400</span>
+              <span style="font-weight: 400; color: #64748b; font-size: 11px; margin-left: 2px;">/ night</span>
+            </div>
+            <span class="mini-link">View Stay →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Tab Bar -->
+  <div class="tab-bar">
+    <div class="tab-item active">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <span>Explore</span>
+    </div>
+    <div class="tab-item">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+      <span>Saved</span>
+    </div>
+    <div class="tab-item">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+      </svg>
+      <span>Trips</span>
+    </div>
+    <div class="tab-item">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <span>Inbox</span>
+    </div>
+    <div class="tab-item">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+      <span>Profile</span>
+    </div>
+  </div>
+
+  <!-- iOS Home Indicator -->
+  <div class="home-indicator"></div>
+
+</body>
+</html>
